@@ -70,10 +70,7 @@ class mssqli
     {
         if($this->debug){ echo '<pre>STORED PRO TEST:</pre>'; }
         
-        //$stmt = $this->pdo->prepare("{?= CALL usp_300_006_001_GetScoreCommsApps(?)}");        
         $value = 162;
-        //$stmt->bindParam(1, $retval, PDO::PARAM_STR | PDO::PARAM_INPUT_OUTPUT, 500);
-        //$stmt->bindParam(2, $value, PDO::PARAM_INT | PDO::PARAM_INPUT_OUTPUT, 6);
         
         $stmt = $this->pdo->prepare("EXECUTE dbo.usp_300_006_001_GetScoreCommsApps ?");
         debug_print($this->pdo->errorInfo());
@@ -299,8 +296,6 @@ class mssqli
         }
                 
         return new mssqli_stmt($this->pdo,$this->stmt,$this->query,$this->debug);
-        
-        //return $this;
     }
         
     function __destruct()
@@ -334,8 +329,6 @@ class mssqli_stmt
         {
             debug_print($this);
         }
-                        
-        //echo $this->results;
     }
     
     function bind_param()
@@ -347,27 +340,7 @@ class mssqli_stmt
         $types = str_split(array_shift($args),1);
         $set = $this->set;
         $set_vals = $this->set_vals;
-        
-        /*foreach($set_vals as $key => $val)
-        {
-            if($val!='?')
-            {
-                $args = array_merge(
-                    array_slice($args,0,$key),
-                    array($key=>$val),
-                    array_slice($args,$key)
-                );
-                                
-                $types = array_merge(
-                    array_slice($types,0,$key),
-                    array($key=>(is_int($val) ? 'i' : 's')),
-                    array_slice($types,$key)
-                );
-                //$types[$key] = is_string($val) ? 's' : 'i';
-                //$fields[$key] = $val;
-            }
-        }*/
-        
+                
         if($this->debug)
         {
             debug_print($set);
@@ -425,27 +398,6 @@ class mssqli_stmt
             
             $this->insert_id = $last_insert['id'];
         }
-        
-        /*if($this->query_type=='select')
-        {
-            //$num_rows_query = preg_replace(array('#SELECT *.*? *FROM *#','# *ORDER *BY.*? *$#'),array('SELECT COUNT(*) AS num_rows FROM ',''),$this->query);
-            //$results = $this->pdo->query($num_rows_query);
-            //$this->num_rows = $results->fetchColumn();
-        }
-        else
-        {
-            $this->num_rows = $this->stmt->rowCount();
-        }
-        
-        if($this->query_type=='insert')
-        {
-            $temp = $this->stmt->fetch(PDO::FETCH_ASSOC);
-            debug_print($temp);
-        }
-        else
-        {
-            //$this->insert_id = $this->pdo->lastInsertId();
-        }*/
     }
     
     /* COULD POSSIBLY BE OPTIMISED USING A REFERENCE AND func_get_args() */
@@ -535,27 +487,22 @@ class mssqli_result implements Iterator
     }
     
     function rewind() {
-        //var_dump(__METHOD__);
         $this->position = 0;
     }
 
     function current() {
-        //var_dump(__METHOD__);
         return $this->results[$this->position];
     }
 
     function key() {
-        //var_dump(__METHOD__);
         return $this->position;
     }
 
     function next() {
-        //var_dump(__METHOD__);
         ++$this->position;
     }
 
     function valid() {
-        //var_dump(__METHOD__);
         return isset($this->results[$this->position]);
     }
     
